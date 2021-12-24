@@ -113,28 +113,6 @@ class AdminController extends Controller
             
         }
         
-        
-        //$listaAluno = $aulacadastrada;
-
-        /*
-        //Caso seja Aluno, Mostra Aulas Inscritas por Ele
-        $listaAluno = Checkin::where('aluno_id', Auth::user()->id)->paginate(30);
-
-
-        //Pegar dados das aulas inscritas pelo Aluno com o ID Logado
-        foreach($listaAluno as $inscricao)
-        {
-            $dadosaula = Aula::where('id', $inscricao->aula_id)->get();
-            $inscricao['aula'] = $dadosaula;
-
-        }
-        */
-        
-        
-
-
-
-
 
         //3º
         return view('painel.dashboard', ['listaAdmin' => $listaAdmin, 'listaAluno'=>$AulasCadastradas]);
