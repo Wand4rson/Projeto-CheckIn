@@ -294,7 +294,7 @@ class AdminController extends Controller
                 //dd($AulasMesmoHorarioData);
                 if (count($AulasMesmoHorarioData) > 0)
                 {
-                    echo "Encontrou duplicidade";
+                    //echo "Encontrou duplicidade";
                     return redirect()->back()->withErrors(['msg' => 'Já existe aula lançada no intervalo de data e horário selecionado.'])->withInput();                
                 }                                                                       
             }
@@ -365,7 +365,7 @@ class AdminController extends Controller
             //5º Enviar o Email para os Alunos
             //Metodo Enviar Email.....
 
-            alert()->success('Atenção','Disparar Email para Alunos que estão no Array');
+            alert()->warning('Atenção','Disparar Email para Alunos que estão no Array');
 
 
             //6-Recarrega Listagem
@@ -386,6 +386,40 @@ class AdminController extends Controller
 
         if($estainscrito)
         {
+
+
+            //O Aluno pode cancelar o checkin até 30 minutos antes da aula
+             $AulaInscrita = Aula::where('id', $idAula)->first();
+            //if ($AulaInscrita->dhinicioaula <> Date())
+
+            //$start = date_create('2021-12-24 18:55:00');
+            //$end = date_create('2021-12-24 18:39:24');
+            //$diff=date_diff($end,$start);
+            //dd($diff);
+
+            $dhDiaAtual = date_create(date('m/d/Y h:i:s a', time()));
+            $dhInicioAula = date_create($AulaInscrita->dhinicioaula);
+            $diff=date_diff($dhInicioAula,$dhDiaAtual);
+
+
+            $horaDiferenca = $diff->format('%h');
+            $minutosDiferenca = $diff->format('%I');
+            
+            //Esta tentando cancelar no mesmo dia, dentro de um periodo de 59 minutos antes da Aula
+            if (($horaDiferenca === '0' || $horaDiferenca ==='00') ||
+               ($horaDiferenca === 0 || $horaDiferenca ===00))
+            {                
+                if ($minutosDiferenca < 30)
+                {
+                    //echo "Não é Possível Cancelar Inscrição das Aula, Já Irá começar nos proximos 30 minutos";
+                    alert()->error('Atenção','Só é possível cancelar a inscrição até 30 minutos antes da aula. Operação não realizada');
+                    return redirect()->route('painel.dashboard')->with(['ErrorDashboard'=>'Não é possível cancelar a inscrição, aula já irá iniciar..']);
+                }
+
+
+            }
+
+            
             //1º Encontrou Inscrição Remove
             $estainscrito->delete();
 

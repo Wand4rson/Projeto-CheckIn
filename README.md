@@ -25,3 +25,4 @@ Email : aluno2@hotmail.com e Senha: 123456
 ## Dicas
 - Executar as Migrations
 - Ou restaurar o dump que esta na pasta dump_demo
+- Para testes com relação a data e hora, modifiquei o 'timezone' => 'America/Cuiaba',
