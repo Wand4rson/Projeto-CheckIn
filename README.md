@@ -1,6 +1,6 @@
 ## Teste Prático de Conhecimento - Laravel.
 
-Aplicação desenvolvida em Laravel, Teste de conhecimento para a vaga de programadorlaravel na MySystem Labs.
+Aplicação desenvolvida em Laravel, Teste de conhecimento.
 
 ## Objeto do Teste
 
