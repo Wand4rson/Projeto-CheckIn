@@ -421,6 +421,38 @@ class AdminController extends Controller
         if($aula)
         {
 
+            
+            $dhDiaAtual = date_create(date('m/d/Y h:i:s a', time()));
+            $dhInicioAula = date_create($aula->dhinicioaula);
+            $diff=date_diff($dhDiaAtual, $dhInicioAula);
+
+
+            $diaDiferenca = $diff->format('%r');
+            $horaDiferenca = $diff->format('%h');
+            $minutosDiferenca = $diff->format('%I');         
+
+            //Aula Atrasada não é possível se inscrever
+            if (($diaDiferenca === '-'))
+            {       
+                alert()->error('Atenção','Só é possível se inscrever até 30 minutos antes da aula. Operação não realizada');
+                return redirect()->route('painel.dashboard')->with(['ErrorDashboard'=>'Não é possível se inscrever, aula atrasada..']);
+            }
+
+
+
+            //Inscrição somente até 30 minutos antes da Aula ou seja dentro da mesma Hora se está se inscrevendo no mesmo dia da aula.
+            if (($horaDiferenca === '0' || $horaDiferenca ==='00') ||
+               ($horaDiferenca === 0 || $horaDiferenca ===00))
+            {                
+
+                if ($minutosDiferenca < 30)
+                {                    
+                    alert()->error('Atenção','Só é possível se inscrever na aula até 30 minutos antes de seu inicio. Operação não realizada');
+                    return redirect()->route('painel.dashboard')->with(['ErrorDashboard'=>'Não é possível se inscrever na aula, faltam menos de 30 minutos para seu inicio..']);
+                }
+            }
+           
+            //Efetua a Inscrição do Aluno na Aula
             $checkin = new Checkin();
             $checkin->aluno_id = Auth::user()->id;
             $checkin->aula_id = $idAula;
